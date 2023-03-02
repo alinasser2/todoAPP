@@ -7,12 +7,14 @@ from .serializers import TaskSerializer
 from rest_framework import generics
 
 
+
 @api_view(["GET"])
 def index(request):
     tasks = Task.objects.all()
     task = TaskSerializer(tasks,many=True)
     return Response(task.data)
 
+# pass the task's title and time in a post request to add it
 @api_view(["POST"])
 def add(request):
     if request.method == "POST":
@@ -23,6 +25,7 @@ def add(request):
         return Response(f"{task.time}   {task.title}",status=200)
     return Response("failed",status=200)
 
+# pass id , title and time in an post request. this api determines the considered task with the id then update it's title and time
 @api_view(["POST"])
 def update(request):
     if request.method == "POST":
@@ -35,6 +38,7 @@ def update(request):
         task.save()
     return Response("task updated successfully.",status=200)
 
+# pass the id to delete the task 
 @api_view(["POST"])
 def delete(request):
     if request.method == "POST":
