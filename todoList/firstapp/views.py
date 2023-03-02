@@ -4,7 +4,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Task
 from .serializers import TaskSerializer
-# Create your views here.
+from rest_framework import generics
+
 
 @api_view(["GET"])
 def index(request):
@@ -41,3 +42,23 @@ def delete(request):
         task = Task.objects.get(id = id)
         task.delete()
         return Response("task deleted successfully.",status=200)
+
+
+
+# class based views
+
+# update, get and delete a specific task
+class add_delete_update(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = TaskSerializer
+    queryset = Task.objects.all()
+    lookup_field = 'id'
+
+# list all tasks
+class ListTasks(generics.ListAPIView):
+    serializer_class = TaskSerializer
+    queryset = Task.objects.all()
+
+# add a task
+class add_task(generics.CreateAPIView):
+    serializer_class = TaskSerializer
+    queryset = Task.objects.all()
